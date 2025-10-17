@@ -1,0 +1,77 @@
+Prompt Template — Gap Analysis HTML
+===================================
+
+Purpose
+-------
+Use this prompt to ask a language model to compare a "current state" implementation document against a requirements/specification document and produce an actionable HTML gap analysis.
+
+Required Inputs Before You Run The Prompt
+-----------------------------------------
+- ANALYSIS_TITLE: concise name for the gap analysis (e.g., "Service Mesh Control Plane – Gap Plan").
+- CURRENT_STATE_SUMMARY: 1–2 paragraph synopsis of what the current state document describes.
+- REQUIREMENTS_SUMMARY: 1–2 paragraph synopsis of the target requirements.
+- CURRENT_STATE_DOC: the full HTML (or markdown) document summarizing the existing implementation status.
+- REQUIREMENTS_DOC: the full requirements/specification document.
+- GAP_ITEMS: optional list of known focus areas you want the model to prioritize; leave empty to let it derive gaps automatically.
+- STYLE_NOTES (optional): palette or tone adjustments if you need to deviate from the default dark theme.
+
+How To Use
+----------
+1. Collect the inputs above.
+2. Replace each placeholder inside the prompt body with the actual content (use triple quotes for multi-line documents).
+3. Provide the entire prompt, including the quoted block, to the model.
+4. Review the generated HTML and verify that the identified gaps, severities, and references align with your artifacts.
+
+Prompt Body (copy everything inside the quotes)
+-----------------------------------------------
+"""
+You are a senior delivery lead preparing a detailed HTML gap analysis. You receive two source documents: the current-state implementation summary and the target requirements. Follow the instructions exactly.
+
+Inputs
+  • Analysis Title: {{ANALYSIS_TITLE}}
+  • Current State Summary: {{CURRENT_STATE_SUMMARY}}
+  • Requirements Summary: {{REQUIREMENTS_SUMMARY}}
+  • Current State Document:
+    {{CURRENT_STATE_DOC}}
+  • Requirements Document:
+    {{REQUIREMENTS_DOC}}
+  • Focus Areas (optional): {{GAP_ITEMS}}
+  • Style Notes (optional): {{STYLE_NOTES}}
+
+Output Requirements
+1. Emit a single, self-contained HTML5 document.
+   - Include `<!doctype html>`, `<html lang="en">`, and a `<head>` section with `<meta charset="utf-8">`, `<meta name="viewport" content="width=device-width, initial-scale=1">`, and `<title>{{ANALYSIS_TITLE}}</title>`.
+   - Embed a `<style>` block that applies a dark theme palette (background `#0b0d10`, panel `#12161b`, text `#e7ecf3`, accents in emerald/blue, subtle borders). Adjust only if `{{STYLE_NOTES}}` specifies alternatives.
+   - Use body padding ~32px, an `<h1>` with a colored left border, and an ordered list of gap items styled as cards with numbered bullets.
+
+2. Structure of the Body
+   - Start with `<h1>{{ANALYSIS_TITLE}}</h1>`.
+   - Add two introductory paragraphs summarizing the current state and target requirements using `{{CURRENT_STATE_SUMMARY}}` and `{{REQUIREMENTS_SUMMARY}}`.
+   - Insert an `<ol>` where each `<li>` represents a distinct gap.
+
+3. Constructing Each Gap Item
+   - Derive gap candidates by comparing obligations in the requirements document to coverage in the current state document; integrate `{{GAP_ITEMS}}` as high-priority topics if provided.
+   - For each gap, include:
+     • `<strong>` label naming the capability or requirement theme.
+     • Severity tag in parentheses using `Critical`, `High`, `Medium`, or `Low` based on impact of not meeting the requirement.
+     • Concise summary sentence stating what is missing or misaligned.
+     • Follow-up sentences (same paragraph) that:
+       – Cite the relevant requirement (include section names or quotes as inline `<em>` text).
+       – Describe observed current-state coverage or deficit.
+       – Recommend concrete next actions, mentioning who or what component should change when possible.
+     • Reference any pertinent configuration files, modules, or tests from both documents; use inline `<code>` for identifiers, and absolute or repository-relative links when URLs are present.
+
+4. Coverage Notes
+   - If a requirement is fully satisfied, do not create a gap item; instead mention complete coverage in a short concluding paragraph after the ordered list.
+   - When evidence is ambiguous, note the uncertainty and recommend discovery work.
+
+5. Closing Section
+   - After the `<ol>`, add a `<section id="next-steps">` with an `<h2>Next Steps</h2>` heading.
+   - Summarize the top three remediation priorities as a bullet list (`<ul>`), ordered by severity and dependency.
+   - If applicable, add a muted paragraph highlighting risks or assumptions that require follow-up.
+
+6. Quality Bar
+   - Ensure the analysis is grounded in the provided documents; do not invent requirements or implementations that are not supported by textual evidence.
+   - Maintain concise, decisive prose in active voice.
+   - Keep HTML well-formed and avoid extraneous commentary outside the document.
+"""
