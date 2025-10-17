@@ -1,0 +1,91 @@
+Prompt Template — Generate BDD Scenarios and HTML from Gap Analysis
+===================================================================
+
+Purpose
+-------
+Use this prompt when you want an AI assistant to convert a structured “Gap Analysis” or requirements crosswalk document into:
+1. A `.feature` file containing Behaviour-Driven Development (BDD) scenarios in Given/When/Then syntax.
+2. A styled HTML summary document that visually mirrors a professional gap-analysis layout, includes a hyperlink to the `.feature` file, and embeds the full scenario text from the feature file.
+
+Required Inputs Before You Run The Prompt
+-----------------------------------------
+- GAP_ANALYSIS_TEXT: full text of the gap-analysis or requirements document.
+- DOCUMENT_TITLE: title of the source document (e.g., "Renewal Adjustments – Gap Analysis").
+- DOCUMENT_VERSION: version or date string for traceability (optional).
+- INCLUDE_COMMENTS: `true` or `false` to control inclusion of inline `#` comments in the `.feature` file.
+- OUTPUT_FORMAT: desired output format for the `.feature` file — `gherkin`, `markdown`, or `plain`.
+- FEATURE_FILENAME: desired filename for the generated `.feature` document (e.g., `renewal-adjustments.feature`).
+- INCLUDE_HTML: `true` or `false` — when `true`, produce a matching HTML summary that links to the `.feature` file.
+
+How To Use
+----------
+1. Gather the complete text of your gap analysis or equivalent numbered requirements document.
+2. Paste it into `{{GAP_ANALYSIS_TEXT}}`.
+3. Provide `{{DOCUMENT_TITLE}}`, `{{DOCUMENT_VERSION}}`, and `{{FEATURE_FILENAME}}` for traceability and linking.
+4. Choose whether to include inline requirement comments via `{{INCLUDE_COMMENTS}}`.
+5. Set `{{OUTPUT_FORMAT}}` to define how the `.feature` content should be formatted.
+6. Set `{{INCLUDE_HTML}} = true` to also generate an HTML gap-summary file styled like a typical corporate gap-analysis report, with a link to the `.feature` file.
+7. Run the prompt. Review both outputs before adding them to your repository or documentation system.
+
+Prompt Body (copy everything inside the quotes)
+-----------------------------------------------
+"""
+You are an expert in Behaviour-Driven Development (BDD), quality engineering, and technical documentation.
+
+Scenario
+  • The user provides a structured “Gap Analysis” document with numbered findings or requirements.
+  • Each gap describes a behavioural or implementation need.
+  • Your task is to generate both a `.feature` document (for executable BDD tests) and a styled HTML summary document (for human-readable reporting).
+
+Inputs
+  • Document Title: {{DOCUMENT_TITLE}}
+  • Document Version: {{DOCUMENT_VERSION}}
+  • Gap Analysis Text: {{GAP_ANALYSIS_TEXT}}
+  • Output Format: {{OUTPUT_FORMAT}}
+  • Include Comments: {{INCLUDE_COMMENTS}}
+  • Feature Filename: {{FEATURE_FILENAME}}
+  • Include HTML: {{INCLUDE_HTML}}
+
+Steps
+1. Parse `{{GAP_ANALYSIS_TEXT}}` to detect numbered gaps (e.g., “1.”, “2.”, etc.).
+2. For each gap:
+   - Create a **Feature** titled with the gap heading, appending “(Gap #n)”.
+   - Add one or more **Scenario** sections that describe the expected system behaviour to close that gap.
+   - Use canonical BDD keywords:
+       - `Given` → preconditions
+       - `When`  → user or system actions
+       - `Then`  → observable outcomes
+   - If several scenarios share setup, include a **Background** block.
+3. If `{{INCLUDE_COMMENTS}}` is true, add inline `#` comments referencing original document sections or identifiers.
+4. Produce the `.feature` output in the chosen `{{OUTPUT_FORMAT}}` (`gherkin`, `markdown`, or `plain`).
+5. If `{{INCLUDE_HTML}}` is true, generate an HTML report that:
+   - Uses a clean, professional gap-analysis aesthetic with a dark background, light text, and clearly numbered sections.
+   - Contains a top-level header with the document title and version.
+   - Displays each numbered gap as a styled card (using `<ol>`, `<li>`, and `<h2>` tags).
+   - Summarises the key BDD scenarios derived from that gap, and embeds the full Given/When/Then scenario text inside `<pre><code>` blocks that exactly match the content in the `.feature` file.
+   - Includes a hyperlink at the top linking to the `.feature` file, e.g.:
+     `<a href="{{FEATURE_FILENAME}}">View BDD Feature Scenarios</a>`.
+   - Uses minimal inline CSS to resemble a structured report (bordered cards, accent colour headings, rounded corners).
+6. Return both outputs clearly labeled with headers:
+   - `### .feature Output`
+   - `### HTML Output`
+
+Output Requirements
+  • Generate both a valid `.feature` document and, when enabled, an HTML summary document.
+  • The `.feature` document must:
+      - Follow standard BDD (Given/When/Then) syntax.
+      - Include numbered gap references `(Gap #n)`.
+      - Be valid for frameworks such as Cucumber, Behave, or SpecFlow.
+  • The HTML document must:
+      - Present numbered gaps clearly.
+      - Include a hyperlink to the `.feature` file.
+      - Embed the full scenario text for each scenario in `<pre><code>` blocks, matching the `.feature` file exactly.
+      - Be visually consistent with a modern gap-analysis report.
+  • All content must be cleanly formatted, self-contained, and easily read by both technical and non-technical users.
+
+Quality Bar
+  • Concise, active-voice steps describing clear outcomes.
+  • Atomic scenarios—each verifies one distinct behaviour.
+  • The HTML must be valid, readable, and accessible.
+  • Outputs must be ready for immediate inclusion in version control or publication.
+"""
