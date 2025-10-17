@@ -1,27 +1,29 @@
-# ai-prompts
+# AI Prompts Library
 
-This repository contains a collection of AI prompt examples and utilities.
+Reusable, version-controlled prompts for product teams. Every file ends in `.prompt.txt`, making it easy to search, lint, and automate across categories.
 
-Styled HTML homepage
---------------------
-The repository's styled HTML homepage is published with GitHub Pages:
+- GitHub Pages overview: https://nikcross.github.io/ai-prompts
+- Rich local preview: [README.html](./README.html)
+- Quick summary (same as Pages site): [docs/index.html](./docs/index.html)
 
-https://nikcross.github.io/ai-prompts/
+## Catalog Snapshot
 
-If you want the styled README shown as the project’s first page on github.com, publish README.html with GitHub Pages (move it to docs/index.html or to a gh-pages branch and enable Pages in repository settings).
+| Category | Subdirectory | Highlights |
+| --- | --- | --- |
+| Software Developer | requirements | `crosswalk-prompt-template.prompt.txt` for narrative/implementation tables; `gap-analysis.prompt.txt` for requirement coverage reports |
+| | testing | `java-test-format.prompt.txt` for consistent JUnit documentation |
+| Maintainer | authoring | `prompt-authoring-blueprint.prompt.txt` to draft new prompts; `prompt-style-audit.prompt.txt` to review contributions |
 
-View locally
-------------
-- Open README.html directly in your browser to see the styled version (or docs/index.html if you move it there).
+## Contributing
 
-Contributing
-------------
-Contributions welcome — open issues or pull requests.
+1. Save new prompts with the `.prompt.txt` suffix in the appropriate category/subdirectory.
+2. Use the Maintainer prompts to ensure structure and tone match the house style.
+3. Open a pull request describing the workflow the prompt improves.
 
-License
--------
-Specify your license here (e.g., MIT).
+## Roadmap
 
-Contact
--------
-@nikcross
+- Expand into design, product, and operations categories.
+- Add automated lint checks for prompt metadata.
+- Publish quickstart guides for integrating prompts into IDE snippets and CI pipelines.
+
+Maintained by the community — feedback and ideas are always welcome.

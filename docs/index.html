@@ -1,266 +1,176 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI Prompts Library — Overview</title>
-<style>
-  :root {
-    color-scheme: dark;
-    --bg: #0b0d10;
-    --panel: #12161b;
-    --text: #e7ecf3;
-    --muted: #9aa7b7;
-    --accent: #34c759;
-    --accent-alt: #4dabf7;
-    --border: rgba(255, 255, 255, 0.08);
-  }
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0;
-    font-family: "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    background: radial-gradient(120% 120% at 0% 0%, rgba(77, 171, 247, 0.12) 0%, transparent 40%), var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-  .wrap {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 48px 24px 80px;
-  }
-  header {
-    background: linear-gradient(135deg, rgba(52, 199, 89, 0.2) -20%, rgba(77, 171, 247, 0.12) 60%, transparent 120%);
-    padding: 32px 32px 40px;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
-  }
-  header h1 {
-    margin: 0;
-    font-size: clamp(2.2rem, 4vw, 3.2rem);
-    letter-spacing: -0.02em;
-  }
-  header p {
-    margin-top: 12px;
-    max-width: 720px;
-    color: var(--muted);
-    font-size: 1.05rem;
-  }
-  .cta {
-    margin-top: 18px;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 18px;
-    background: rgba(52, 199, 89, 0.2);
-    border-radius: 999px;
-    border: 1px solid rgba(52, 199, 89, 0.35);
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.85rem;
-  }
-  section {
-    margin-top: 48px;
-  }
-  section h2 {
-    margin: 0 0 16px;
-    font-size: 1.65rem;
-    letter-spacing: -0.01em;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--panel);
-    border-radius: 14px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  }
-  thead th {
-    text-align: left;
-    padding: 18px 20px;
-    font-size: 0.95rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    background: rgba(77, 171, 247, 0.16);
-    color: var(--text);
-  }
-  tbody tr:not(:last-child) td {
-    border-bottom: 1px solid var(--border);
-  }
-  td {
-    vertical-align: top;
-    padding: 22px 20px;
-  }
-  td.category {
-    width: 34%;
-    border-right: 1px solid var(--border);
-  }
-  td.category h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    color: var(--accent-alt);
-  }
-  td.details ul {
-    margin: 12px 0 0;
-    padding-left: 20px;
-  }
-  td.details li + li {
-    margin-top: 8px;
-  }
-  .note {
-    margin-top: 12px;
-    padding: 16px 20px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: rgba(18, 22, 27, 0.7);
-    color: var(--muted);
-  }
-  .footer {
-    margin-top: 56px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    padding: 24px 28px;
-    border-radius: 14px;
-    border: 1px solid var(--border);
-    background: rgba(18, 22, 27, 0.8);
-  }
-  .footer-item h4 {
-    margin: 0 0 10px;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 0.18em;
-    color: var(--muted);
-  }
-  .footer-item p {
-    margin: 0;
-    max-width: 280px;
-    color: var(--text);
-  }
-  a {
-    color: var(--accent);
-    text-decoration: none;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-  code {
-    font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-    font-size: 0.9rem;
-    background: rgba(77, 171, 247, 0.14);
-    padding: 2px 6px;
-    border-radius: 6px;
-    color: var(--text);
-  }
-  @media (max-width: 720px) {
-    td.category, td.details {
-      display: block;
-      width: 100%;
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Prompts Library — Quick Overview</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0d10;
+      --panel: #12161b;
+      --text: #e7ecf3;
+      --muted: #9aa7b7;
+      --accent: #34c759;
+      --accent-alt: #4dabf7;
+      --border: rgba(255, 255, 255, 0.08);
     }
-    td.category {
-      border-right: none;
-      border-bottom: 1px solid var(--border);
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
-  }
-</style>
+    .wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 48px 24px 64px;
+    }
+    header {
+      background: linear-gradient(135deg, rgba(52, 199, 89, 0.18), rgba(77, 171, 247, 0.18));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: -0.02em;
+    }
+    p.lede {
+      margin-top: 12px;
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 620px;
+    }
+    section {
+      margin-top: 48px;
+      background: var(--panel);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 28px 32px;
+      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.28);
+    }
+    section h2 {
+      margin: 0 0 16px;
+      font-size: 1.5rem;
+      color: var(--accent-alt);
+    }
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    li + li { margin-top: 8px; }
+    .catalog {
+      display: grid;
+      gap: 18px;
+    }
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      background: rgba(18, 22, 27, 0.8);
+    }
+    .card h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+    .card p {
+      margin: 10px 0 14px;
+      color: var(--muted);
+    }
+    .card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    footer {
+      margin-top: 48px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    @media (max-width: 640px) {
+      section { padding: 24px; }
+      .card { padding: 18px 20px; }
+    }
+  </style>
 </head>
 <body>
   <div class="wrap">
     <header>
       <h1>AI Prompts Library</h1>
-      <p>This repository curates battle-tested prompts that teams can reuse across development workflows. Every prompt ends with a <code>.prompt.txt</code> suffix so they are easy to search, lint, and embed in prompt catalogs or automation pipelines.</p>
-      <span class="cta">Copy, adapt, ship.</span>
+      <p class="lede">A curated catalog of `.prompt.txt` files for engineers, maintainers, and cross-functional teammates. Copy the prompt, fill the placeholders, and ship faster without reinventing instructions.</p>
+      <p><a href="https://github.com/nikcross/ai-prompts">View the repository on GitHub</a></p>
     </header>
 
-    <section aria-labelledby="why-it-exists">
-      <h2 id="why-it-exists">What You&apos;ll Find</h2>
-      <p>Prompts are organized by discipline (for example <code>software-developer</code> or <code>maintainer</code>) and then refined into purpose-driven subdirectories like <code>requirements</code>, <code>testing</code>, or <code>authoring</code>. Each document captures the prompt text exactly as you would paste it into your AI assistant, making it trivial to share and version-control improvements.</p>
-    </section>
-
-    <section aria-labelledby="catalog">
-      <h2 id="catalog">Current Catalog</h2>
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">Category</th>
-            <th scope="col">Prompts &amp; Use Cases</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="category">
-              <h3>Software Developer</h3>
-              <p>Accelerate product and platform engineering.</p>
-            </td>
-            <td class="details">
-              <strong>Requirements</strong>
-              <ul>
-                <li><code>crosswalk-prompt-template.prompt.txt</code> — Produce narrative vs. implementation crosswalks with a ready-to-run HTML layout.</li>
-                <li><code>gap-analysis.prompt.txt</code> — Highlight requirement deltas and remediation paths.</li>
-              </ul>
-              <strong>Testing</strong>
-              <ul>
-                <li><code>java-test-format.prompt.txt</code> — Normalize Java test descriptions into consistent templates.</li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td class="category">
-              <h3>Maintainer</h3>
-              <p>Author and review prompts so the catalog stays coherent.</p>
-            </td>
-            <td class="details">
-              <strong>Authoring</strong>
-              <ul>
-                <li><code>prompt-authoring-blueprint.prompt.txt</code> — Generate new prompts that match the repository structure and tone.</li>
-                <li><code>prompt-style-audit.prompt.txt</code> — Evaluate candidate prompts against the house checklist before merging.</li>
-              </ul>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="note">
-        Interested in contributing? Add your prompt under the relevant category with the <code>.prompt.txt</code> extension, then update this catalog so others can discover it quickly.
-      </div>
-    </section>
-
-    <section aria-labelledby="workflow">
-      <h2 id="workflow">Suggested Workflow</h2>
-      <ol>
-        <li>Browse the catalog and open the prompt that matches your task.</li>
-        <li>Copy the contents as-is into your preferred AI assistant, swapping placeholders for project specifics.</li>
-        <li>Contribute refinements by editing the prompt file and documenting the change in this overview.</li>
-      </ol>
-    </section>
-
-    <section aria-labelledby="roadmap">
-      <h2 id="roadmap">Roadmap</h2>
+    <section>
+      <h2>How the Library Is Organized</h2>
       <ul>
-        <li>Add prompts for design, product management, and operations disciplines.</li>
-        <li>Create automated lint checks to verify prompt metadata and extension naming.</li>
-        <li>Publish quickstart guides for integrating prompts into IDE snippets or CI templates.</li>
+        <li><strong>Categories</strong> map to roles such as <code>software-developer</code> or <code>maintainer</code>.</li>
+        <li><strong>Subdirectories</strong> reflect the job-to-be-done (for example, <code>requirements</code>, <code>testing</code>, <code>authoring</code>).</li>
+        <li><strong>Files</strong> end in <code>.prompt.txt</code> and contain ready-to-run instructions you can paste into your AI assistant.</li>
       </ul>
     </section>
 
-    <div class="footer" role="contentinfo">
-      <div class="footer-item">
-        <h4>Conventions</h4>
-        <p>Use lowercase directory names, keep prompts as plain text, and document placeholders inside the prompt body.</p>
+    <section>
+      <h2>Current Catalog Highlights</h2>
+      <div class="catalog">
+        <div class="card">
+          <h3>Software Developer</h3>
+          <p>Prompts that unblock build, requirements, and quality tasks.</p>
+          <ul>
+            <li><code>requirements/crosswalk-prompt-template.prompt.txt</code></li>
+            <li><code>requirements/gap-analysis.prompt.txt</code></li>
+            <li><code>testing/java-test-format.prompt.txt</code></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Maintainer</h3>
+          <p>Meta-prompts for authoring and auditing contributions to the library.</p>
+          <ul>
+            <li><code>authoring/prompt-authoring-blueprint.prompt.txt</code></li>
+            <li><code>authoring/prompt-style-audit.prompt.txt</code></li>
+          </ul>
+        </div>
       </div>
-      <div class="footer-item">
-        <h4>Feedback</h4>
-        <p>Propose improvements through pull requests or issues describing the scenario you optimized.</p>
-      </div>
-      <div class="footer-item">
-        <h4>Reuse</h4>
-        <p>Feel free to copy prompts into your organization. Attribution is appreciated when sharing externally.</p>
-      </div>
-    </div>
+    </section>
+
+    <section>
+      <h2>Contribute in Three Steps</h2>
+      <ol>
+        <li>Draft your prompt following the blueprint and save it with the `.prompt.txt` suffix in the right directory.</li>
+        <li>Run the style audit prompt to confirm structure and placeholder coverage.</li>
+        <li>Open a pull request summarizing the scenario your prompt improves.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Roadmap</h2>
+      <ul>
+        <li>Add prompts for design, product, and operations disciplines.</li>
+        <li>Automate lint checks for prompt metadata and formatting.</li>
+        <li>Publish quickstarts for integrating prompts into IDE snippets and CI templates.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <span>Maintained by the community.</span>
+      <span>Have an idea? Start a discussion on GitHub.</span>
+    </footer>
   </div>
 </body>
 </html>
