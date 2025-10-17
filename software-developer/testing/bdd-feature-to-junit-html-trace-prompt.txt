@@ -1,0 +1,124 @@
+Prompt Template — Generate JUnit Tests and HTML Trace (Scenario ⇄ Test ⇄ Implementation)
+=======================================================================================
+
+Purpose
+-------
+Use this prompt to transform a `.feature` file (BDD scenarios) into:
+1. A JUnit 5 test class following your project’s conventions.
+2. A **dark-styled HTML traceability document** (visually matching your gap-analysis reports) with three columns:
+   - **Scenario** – from the `.feature` file  
+   - **Test** – generated JUnit method with IDE link  
+   - **Implementation Points** – classes or methods to update to pass the test, also linked to IDE.
+
+Required Inputs Before You Run The Prompt
+-----------------------------------------
+- FEATURE_FILE_TEXT: full text of the `.feature` file.
+- FEATURE_FILE_PATH: path of the feature file in the repo.
+- PROJECT_SOURCE_PATH: base directory of production code (e.g., `src/main/java`).
+- TEST_SOURCE_PATH: base directory of test code (e.g., `src/test/java`).
+- TEST_PACKAGE: Java package for the generated test class (e.g., `com.example.feature`).
+- TEST_CLASS_NAME: desired JUnit test class name (e.g., `RenewalGap1Tests`).
+- IDE_LINK_TEMPLATE: IDE deep link format (e.g., `idea://open?file={{path}}&line={{line}}` or `vscode://file/{{path}}:{{line}}`).
+- TRACE_HTML_PATH: destination path for the generated HTML trace (e.g., `docs/test-trace/gap1-trace.html`).
+- UPDATE_MODE: `"append"` to add new rows or `"overwrite"` to recreate the document.
+- IMPLEMENTATION_HINTS (optional): list of related class or file names to seed implementation point suggestions.
+
+How To Use
+----------
+1. Provide your `.feature` file contents as `{{FEATURE_FILE_TEXT}}`.
+2. Define your project and test paths, package, and class name.
+3. Supply an IDE link template so the HTML links open directly in your IDE.
+4. Specify `{{TRACE_HTML_PATH}}` and `{{UPDATE_MODE}}` to control output handling.
+5. Optionally list `{{IMPLEMENTATION_HINTS}}` for more accurate implementation mapping.
+6. Run the prompt to produce:
+   - A new or updated JUnit 5 test file under `{{TEST_SOURCE_PATH}}`.
+   - A styled HTML trace document that links Scenarios ⇄ Tests ⇄ Implementation points.
+
+Prompt Body (copy everything inside the quotes)
+-----------------------------------------------
+"""
+You are an expert in Java (JUnit 5), BDD parsing, and automated documentation generation.
+
+Goal
+  • Parse the `.feature` file, generate one JUnit test per scenario, and produce an HTML traceability document linking each scenario to its test and related implementation points.
+  • Match the visual style of prior dark gap-analysis documents: dark background, pale text, blue accent, rounded cards, and numbered list items.
+
+Inputs
+  • Feature File Text: {{FEATURE_FILE_TEXT}}
+  • Feature File Path: {{FEATURE_FILE_PATH}}
+  • Project Source Path: {{PROJECT_SOURCE_PATH}}
+  • Test Source Path: {{TEST_SOURCE_PATH}}
+  • Test Package: {{TEST_PACKAGE}}
+  • Test Class Name: {{TEST_CLASS_NAME}}
+  • IDE Link Template: {{IDE_LINK_TEMPLATE}}
+  • Trace HTML Path: {{TRACE_HTML_PATH}}
+  • Update Mode: {{UPDATE_MODE}}
+  • Implementation Hints: {{IMPLEMENTATION_HINTS}}
+
+Steps
+1. Parse `{{FEATURE_FILE_TEXT}}`:
+   - Extract `Feature:` title, each `Scenario:` title, and Given/When/Then lines.
+2. Generate a JUnit 5 test class:
+   - `package {{TEST_PACKAGE}};`
+   - Import `org.junit.jupiter.api.*`.
+   - One method per Scenario:
+     - Method name: `test` + CamelCase(Scenario title)
+     - Annotate with `@DisplayName("<Scenario title>")`
+     - Structure body with:
+       ```java
+       //Given
+       // <brief setup>
+       //When
+       // <action>
+       //Then
+       // <assertions>
+       ```
+   - Apply conventions from the `java-test-format.prompt.txt` file.
+3. Derive likely **Implementation Points**:
+   - Use `{{IMPLEMENTATION_HINTS}}` as seeds.
+   - Infer additional class or method names from scenario verbs and nouns (e.g., “generate draft” → `*Service`).
+   - Map each to `{{PROJECT_SOURCE_PATH}}` with approximate line numbers.
+4. Build IDE links:
+   - Replace `{{path}}` and `{{line}}` placeholders in `{{IDE_LINK_TEMPLATE}}` with actual values.
+   - Example: `idea://open?file=src/main/java/com/example/Service.java&line=42`.
+5. Generate the **HTML traceability document** at `{{TRACE_HTML_PATH}}`:
+   - If `"overwrite"`, rebuild from scratch.
+   - If `"append"`, merge new scenarios into existing rows.
+   - Use valid HTML5 structure:
+     - `<h1>` header for title (e.g., “Feature → Test → Implementation Trace”)
+     - Optional `<p>` with source reference.
+     - `<table>` with headers:
+       | Scenario | Test | Implementation Points |
+     - Each Scenario becomes a table row:
+       - Column 1: scenario name
+       - Column 2: test method (linked via IDE URL)
+       - Column 3: implementation points (linked)
+   - Apply inline CSS consistent with other documents:
+     - body: background `#0b0d10`, color `#e7ecf3`
+     - h1: border-left accent `#2dd4bf`
+     - links: light blue `#6dd3fb`
+     - table: border-collapse, rounded corners, zebra rows for readability
+     - muted footer note in smaller text
+6. Output both artifacts clearly labeled:
+   - `### JUnit Test Output` → Full Java class
+   - `### HTML Output` → Full HTML file
+
+Output Requirements
+  • **JUnit file**
+    - Valid Java source, compiles without modification
+    - One `@Test` per scenario
+    - Clear Given/When/Then structure
+    - `@DisplayName` matches the scenario text
+  • **HTML file**
+    - Matches dark aesthetic of prior gap-analysis docs
+    - Three-column table with clickable IDE links
+    - Valid, self-contained HTML (no external assets)
+  • When appending, add new rows only — avoid duplication
+  • When overwriting, recreate the entire document
+
+Quality Bar
+  • JUnit and HTML outputs must be clean, readable, and ready to commit.
+  • IDE links should open correctly (approximate line numbers acceptable).
+  • HTML visually consistent with previous dark-themed reports.
+  • Output suitable for automated use in large multi-feature projects.
+"""
