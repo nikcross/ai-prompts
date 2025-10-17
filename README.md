@@ -3,8 +3,6 @@
 Reusable, version-controlled prompts for product teams. Every file ends in `.prompt.txt`, making it easy to search, lint, and automate across categories.
 
 - GitHub Pages overview: https://nikcross.github.io/ai-prompts
-- Rich local preview: [README.html](./README.html)
-- Quick summary (same as Pages site): [docs/index.html](./docs/index.html)
 
 ## Catalog Snapshot
 
