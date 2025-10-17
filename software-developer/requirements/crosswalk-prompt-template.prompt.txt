@@ -1,0 +1,85 @@
+Prompt Template — Narrative/Implementation Crosswalk HTML
+================================================================
+
+Purpose
+-------
+Use this text as a drop-in prompt for a language model when you need a project-specific HTML "narrative vs. implementation" crosswalk. Replace the bracketed placeholders with details for the new project before sending the prompt.
+
+Required Inputs Before You Run The Prompt
+-----------------------------------------
+- PROJECT_TITLE: short, evocative name for the document (e.g., "Adaptive Control Plane Overview").
+- PROJECT_SUMMARY: 1–2 paragraph overview of the system’s intent.
+- SECTIONS: ordered list; each item needs
+  * SectionNumber (e.g., 1, 2, …),
+  * Heading (concise title),
+  * Narrative (1–2 paragraphs + optional bullets/ordered lists),
+  * ImplementationReferences (list of `Label | IDELink` pairs; use `jetbrains://idea/...` or repository-relative paths as appropriate),
+  * OptionalConfigAnchors (list of config IDs referenced in narrative, if any),
+  * OptionalTests (list of important test references, if any),
+  * OptionalNotes (anything the model must mention, e.g., performance caveats).
+- FUTURE_ENHANCEMENTS: bullet list of planned improvements (optional).
+- SUMMARY_PARAGRAPH: closing paragraph that restates the big picture.
+- STYLE_NOTES (optional): overrides for colors, tone tweaks, etc.
+
+How To Use
+----------
+1. Gather the inputs above for the target project.
+2. Replace each bracketed placeholder in the prompt body with the real content.
+3. Provide the prompt (including the triple-quoted block) to the model. Ask it to return a single self-contained HTML document.
+4. Review the output to ensure IDE links resolve and that all sections are present.
+
+Prompt Body (copy everything inside the quotes)
+-----------------------------------------------
+"""
+You are a senior technical writer preparing a self-contained HTML document structured as a narrative-and-implementation crosswalk. Follow these directives exactly:
+
+1. Global Requirements
+   - Emit a full HTML5 document with `<!doctype html>`, `<html lang="en">`, and a `<head>` section that includes `<meta charset="utf-8">`, `<meta name="viewport" content="width=device-width, initial-scale=1">`, and a `<title>` set to `{{PROJECT_TITLE}} — Narrative & Implementation Crosswalk`.
+   - Include an embedded `<style>` block that sets a dark theme palette (background `#0b0d10`, panel `#12161b`, text `#e7ecf3`, accent greens/blues, thin borders) and a two-column table layout. Adjust only if `{{STYLE_NOTES}}` explicitly requests changes.
+   - Wrap page content in a `.wrap` container (`max-width: 1100px; padding 40px 24px 80px`) with system sans-serif typography and line-height 1.6.
+
+2. Introductory Section
+   - Present an `<h1>`: `{{PROJECT_TITLE}} — Narrative & Implementation Crosswalk`.
+   - Follow with a paragraph based on `{{PROJECT_SUMMARY}}` explaining that the table pairs specification narrative with implementation references.
+
+3. Crosswalk Table Structure
+   - Create a `<table>` with a header row: "Specification Narrative" and "Implementation References".
+   - For every item in `{{SECTIONS}}`:
+     * Insert a `<tr>` where the left `<td class="section">` contains a `<section id="slug">`.
+       • The section `id` should be `section-{{SectionNumber}}` (kebab-case the heading if you need a human-friendly anchor).
+       • Use `<h2>{{SectionNumber}}. {{Heading}}</h2>`.
+       • Render the narrative paragraphs; preserve bullet or ordered lists if provided.
+       • When referencing configs, wrap the anchor id in `<a href="#cfg-…"><code>…</code></a>`.
+     * The right `<td class="refs">` must contain a `<h3>` titled "Key Implementation".
+       • Output a `<ul>` where each list item is `{{Label}} — {{ShortDescription}}` and links to the provided IDE or repository reference. Use `<a href="{{IDELink}}">` for JetBrains deep links. Repository-relative paths should be plain text unless a URL is given.
+       • If `OptionalTests` is supplied, append a `<h3>` with "Key Tests" and list them similarly.
+       • If `OptionalNotes` exists, add a muted `<p>` or list communicating the note.
+
+4. Configuration Appendix
+   - If any section references configuration anchors, append a final table row that enumerates each unique config id.
+   - The narrative cell should explain each config knob succinctly (1–2 sentences each).
+   - The references cell should point to the configuration source files (JSON/YAML/classes) and testing harnesses that validate them.
+
+5. Future Enhancements (Optional)
+   - When `{{FUTURE_ENHANCEMENTS}}` is non-empty, add a table row with heading "Future Enhancements" on the left (using `<h2>{{N}}. Future Enhancements</h2>`) and list the bullets.
+   - The references column should cite backlog trackers, TODO comments, or relevant code hooks if provided; otherwise include a muted note stating "Tracking TBD".
+
+6. Closing Summary
+   - Add a final row with `<section id="summary">`, `<h2>{{FinalNumber}}. Summary</h2>`, and `{{SUMMARY_PARAGRAPH}}`.
+   - The references cell may stay empty or include high-level links (e.g., README, architecture notebooks).
+
+7. Quality Bar
+   - Ensure semantic HTML (no stray tags, properly nested lists).
+   - Keep prose polished, active voice, present tense; maintain a confident, explanatory tone.
+   - Preserve readability: avoid walls of text, break dense ideas into bullets, and keep list indentation consistent.
+   - Verify every link is absolute JetBrains (`jetbrains://idea/...`) or a repository-relative path; do not invent placeholders.
+   - Do not include any explanatory text outside of the HTML document.
+
+Inputs Provided:
+  • PROJECT_TITLE: {{PROJECT_TITLE}}
+  • PROJECT_SUMMARY: {{PROJECT_SUMMARY}}
+  • SECTIONS: {{SECTIONS}}
+  • FUTURE_ENHANCEMENTS: {{FUTURE_ENHANCEMENTS}}
+  • SUMMARY_PARAGRAPH: {{SUMMARY_PARAGRAPH}}
+  • STYLE_NOTES: {{STYLE_NOTES}}
+"""
