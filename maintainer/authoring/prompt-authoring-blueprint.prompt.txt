@@ -1,0 +1,63 @@
+Prompt Template — Repository Prompt Authoring Blueprint
+=======================================================
+
+Purpose
+-------
+Use this prompt when you want an AI assistant to draft a new reusable prompt that matches the conventions of the `ai-prompts` repository (naming, structure, tone, and metadata). It guides the model to output a `.prompt.txt` file ready to drop into the appropriate category directory.
+
+Required Inputs Before You Run The Prompt
+-----------------------------------------
+- PROMPT_NAME: short, action-oriented name for the new prompt (e.g., "Accessibility Audit HTML").
+- CATEGORY: top-level folder where the prompt will live (e.g., `software-developer`, `designer`, `product-manager`).
+- SUBCATEGORY: optional secondary folder (e.g., `requirements`, `testing`). Provide `root` if none.
+- AUDIENCE_ROLE: who will run the prompt (e.g., "staff frontend engineer").
+- PROBLEM_STATEMENT: one paragraph summarizing the job-to-be-done.
+- REQUIRED_INPUTS: ordered list of placeholders the final prompt needs.
+- HOW_TO_USE_STEPS: numbered steps that explain how someone should run the prompt.
+- OUTPUT_REQUIREMENTS: bulleted list describing the structure/quality bar of the AI's response when someone uses the resulting prompt.
+- STYLE_NOTES (optional): tone or theming instructions the generated prompt should include for its downstream output.
+
+How To Use
+----------
+1. Collect details for each input above. Structure the ordered/bulleted lists using Markdown-friendly notation.
+2. Replace the placeholders inside this template with the real content (wrap long passages in triple quotes).
+3. Provide the entire prompt (including the quoted block) to the model. Ask it to produce a `.prompt.txt` artifact.
+4. Review the output before committing it—ensure the placeholders, directory guidance, and output requirements are accurate.
+
+Prompt Body (copy everything inside the quotes)
+-----------------------------------------------
+"""
+You are a meticulous prompt engineer tasked with creating a reusable prompt for the `ai-prompts` repository. Follow the repository's authoring conventions exactly.
+
+Context
+  • Repository: ai-prompts
+  • Required file extension: `.prompt.txt`
+  • Directory path: `{{CATEGORY}}/{{SUBCATEGORY}}` (omit `/{{SUBCATEGORY}}` when the subcategory is `root`)
+  • Expected sections (in this order): Title line, Purpose, Required Inputs Before You Run The Prompt, How To Use, Prompt Body (copy everything inside the quotes)
+
+Prompt Specification
+  • Prompt Name: {{PROMPT_NAME}}
+  • Audience Role: {{AUDIENCE_ROLE}}
+  • Problem Statement: {{PROBLEM_STATEMENT}}
+  • Required Inputs: {{REQUIRED_INPUTS}}
+  • How-To Steps: {{HOW_TO_USE_STEPS}}
+  • Output Requirements: {{OUTPUT_REQUIREMENTS}}
+  • Style Notes (optional): {{STYLE_NOTES}}
+
+Authoring Requirements
+1. Title line must read `Prompt Template — {{PROMPT_NAME}}`.
+2. Use level-2 Markdown headings (underlines with `===`/`---`) like other prompts in this repo.
+3. In "Required Inputs Before You Run The Prompt", list every placeholder with a short description; highlight optional inputs.
+4. In "How To Use", provide a numbered procedure tailored to the future user.
+5. "Prompt Body (copy everything inside the quotes)" must contain a triple-quoted block describing how the downstream AI should behave. Inside the block:
+   - Start by summarizing the scenario and role aligned to {{AUDIENCE_ROLE}}.
+   - Reference every placeholder exactly once using double curly braces (e.g., `{{PLACEHOLDER}}`).
+   - Include the Output Requirements section, translating the bullets into explicit directives.
+   - Preserve Markdown/HTML instructions needed by downstream tooling.
+6. Ensure the tone is confident, actionable, and free of fluff. Prefer active voice.
+7. Do not invent directories, technologies, or placeholders beyond what is provided.
+8. Finish with a concise quality bar reminding the AI to keep responses grounded and well structured.
+
+Deliverable
+Return only the completed `.prompt.txt` file contents. Do not include extra commentary, shell commands, or filenames.
+"""

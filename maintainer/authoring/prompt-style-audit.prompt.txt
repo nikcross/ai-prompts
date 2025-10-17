@@ -1,0 +1,68 @@
+Prompt Template — Repository Prompt Style Audit
+===============================================
+
+Purpose
+-------
+Run this prompt when you need an AI assistant to verify that a candidate `.prompt.txt` file follows the structural, tonal, and naming conventions used across the `ai-prompts` repository.
+
+Required Inputs Before You Run The Prompt
+-----------------------------------------
+- PROMPT_NAME: filename (without extension) you are auditing.
+- CATEGORY: expected top-level directory for the prompt.
+- SUBCATEGORY: expected second-level directory (or `root` if none).
+- PROMPT_TEXT: full text of the candidate prompt file.
+- MUST_HAVE_PLACEHOLDERS: list of placeholder identifiers that must appear (optional).
+- OPTIONAL_STYLE_NOTES: any additional stylistic constraints to enforce (optional).
+
+How To Use
+----------
+1. Gather the prompt text exactly as written in the candidate file.
+2. Provide the metadata inputs so the reviewer AI can compare the structure against repository norms.
+3. Paste everything into this prompt and run it with your AI assistant.
+4. Review the compliance report and address any blocking issues before merging the prompt.
+
+Prompt Body (copy everything inside the quotes)
+-----------------------------------------------
+"""
+You are a repository compliance reviewer. Assess whether a proposed prompt file aligns with the `ai-prompts` house style.
+
+Inputs
+  • Prompt Name: {{PROMPT_NAME}}
+  • Category: {{CATEGORY}}
+  • Subcategory: {{SUBCATEGORY}}
+  • Candidate Prompt Text:
+    {{PROMPT_TEXT}}
+  • Required Placeholders (optional): {{MUST_HAVE_PLACEHOLDERS}}
+  • Extra Style Notes (optional): {{OPTIONAL_STYLE_NOTES}}
+
+Checklist
+1. File Naming & Placement
+   - Confirm the prompt uses the `.prompt.txt` extension and belongs at `{{CATEGORY}}/{{SUBCATEGORY}}` (omit `/{{SUBCATEGORY}}` when `root`).
+2. Section Order
+   - Verify the first line follows `Prompt Template — ...`.
+   - Ensure sections appear in this order: Purpose, Required Inputs Before You Run The Prompt, How To Use, Prompt Body (copy everything inside the quotes).
+3. Section Quality
+   - Purpose should concisely target the intended use.
+   - Required Inputs list should describe each placeholder and mark optional items.
+   - How To Use must be numbered and actionable.
+   - Prompt Body must contain a triple-quoted block with clear instructions, explicit placeholder usage, and a quality bar.
+4. Placeholder Hygiene
+   - Check that every placeholder from Required Inputs appears in the Prompt Body exactly once.
+   - Flag any placeholders used in the body but missing from the Required Inputs section.
+   - Validate `{{MUST_HAVE_PLACEHOLDERS}}` when provided.
+5. Tone & Style
+   - Writing should be concise, active voice, and free of unnecessary fluff.
+   - Ensure instructions avoid inventing directories or tools not supplied by the author.
+   - Apply {{OPTIONAL_STYLE_NOTES}} if provided.
+6. Output Expectations
+   - Produce a compliance verdict (`Compliant`, `Minor Fixes`, or `Blocker`).
+   - Summarize evidence for each checklist area, citing exact line numbers or quotes when issues exist.
+   - Recommend precise remediation steps for any findings.
+
+Deliverable
+Return a Markdown report with:
+  • `Verdict: ...`
+  • A table of findings (`Area | Status | Notes`)
+  • A short "Ready-To-Merge Checklist" bullet list highlighting any remaining work.
+Do not include the original prompt text in the response.
+"""
