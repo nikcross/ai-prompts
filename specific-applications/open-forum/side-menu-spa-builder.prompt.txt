@@ -1,0 +1,130 @@
+SideMenu Single-Page App Builder
+================================
+
+Use this prompt to scaffold OpenForum single-page web apps that lean on `SideMenu.js`. It distills what the `/TheLab/WebSiteProjects/AFleetForChange/*` sandboxes and `/TheLab/Experiments/ProgresiveWebApp` prototype hint at: SideMenu apps are file-driven (one folder per app), every view ships as `id.html.fragment` + `id.js` (+ optional wiki), and the page shell comes from `side-menu-page.html.template`.
+
+OpenForum Workflow Notes
+------------------------
+- Build incrementally: ship the smallest working view first, layer features one at a time, and verify each step via the pageBuilder refresh or in-browser reload.
+- Expect OpenForum’s automatic two-way binding between HTML fields and JavaScript objects; prefer binding helper APIs over direct DOM plumbing.
+- Lean on OpenForum wiki markup for quick copy (`page.content`) and pivot to fragments when you need full HTML control.
+- Remember each page directory bundles `page.content`, `page.js`, `data.json`, optional `*.sjs`, and view fragments—keep the SideMenu app files under the same folder to stay deployable.
+- Local edits generally land under `/web/content/default`; remote experiments typically live under `/TheLab/Experiments/*` or `/Development/*`.
+
+Pre-flight Questions
+--------------------
+Before writing files, collect:
+- App name + page path (e.g. `/TheLab/WebSiteProjects/MyApp`) to derive `pageName`.
+- Menu layout: ordered list of view titles/ids, grouping categories, default view.
+- Data sources or APIs each view needs, and whether any view should refresh live or clean up on exit.
+- Progressive Web App (PWA) needs: manifest details (name, icons, theme), offline caching expectations, install prompt copy.
+
+Directory Layout Expectations
+-----------------------------
+Mirror the structure seen in the AFleet/BreachFarm folders:
+- `page.html.template` & `page.css` customise the shell.
+- `page.js` bootstraps the SideMenu and any global wiring.
+- `application.json` stores the JSON side menu schema so editors can tweak it.
+- Per view: `view-id.html.fragment` (primary markup), optional `view-id.wiki.fragment` (rich text fallback), `view-id.js` (view-specific logic).
+- Optional extras for PWA or utilities: `manifest.json`, `service-worker.js`, `access.json`, helper assets (icons, images).
+
+Bootstrapping SideMenu
+----------------------
+- Always include the core script at the top of `page.js`:
+  ```javascript
+  OpenForum.includeScript("/OpenForum/Javascript/Application/SideMenu.js");
+  ```
+- Define a config object shaped like (note the fully-qualified script/src paths that the SideMenu loader expects):
+  ```javascript
+  var sideMenuConfig = {
+    pageName: pageName,
+    sideMenu: [
+      { view: "Dashboard", id: "dashboard", src: "/HomeLab/MyApp/dashboard.html.fragment", script: "/HomeLab/MyApp/dashboard.js", default: true },
+      {
+        category: "Operations",
+        views: [
+          { view: "Routes", id: "routes", src: "/HomeLab/MyApp/routes.html.fragment", script: "/HomeLab/MyApp/routes.js" }
+        ]
+      }
+    ]
+  };
+  ```
+- Register an initialiser so the menu spins up after dependencies load:
+  ```javascript
+  OpenForum.addInitialiser(function () {
+    window.appSideMenu = new SideMenu(
+      "offCanvasMenu",
+      "applicationView",
+      sideMenuConfig.sideMenu,
+      function () {
+        OpenForum.debug("INFO", "Side menu ready");
+      }
+    );
+
+    appSideMenu.closeOnShow(true); // Collapse drawer after each selection (toggle to false for desktop dashboards)
+    appSideMenu.setViewRefresh("dashboard", function () {
+      OpenForum.debug("INFO", "Dashboard refreshed");
+    });
+    appSideMenu.setViewClose("routes", function () {
+      OpenForum.debug("INFO", "Routes view closed");
+    });
+
+    return true; // Signals the initialiser finished set-up
+  });
+  ```
+- Extract the menu schema into `application.json` so the same config feeds editors:
+  ```json
+  {
+    "sideMenu": [
+      { "view": "Dashboard", "id": "dashboard", "src": "/HomeLab/MyApp/dashboard.html.fragment", "script": "/HomeLab/MyApp/dashboard.js", "default": true },
+      { "category": "Operations", "views": [ { "view": "Routes", "id": "routes", "src": "/HomeLab/MyApp/routes.html.fragment", "script": "/HomeLab/MyApp/routes.js" } ] }
+    ]
+  }
+  ```
+- Rely on the shared `pageName` fallback in `SideMenu.js` when possible, but be aware that some deployments expect fully-qualified paths for `src` and `script`; verify against your target environment.
+
+View Stubs & Hooks
+------------------
+- Each `*.html.fragment` should be self-contained Foundation markup—wrap content in a single root element (e.g. `<div class="panel">`).
+- Pair every view with a `*.js` that exposes modular helpers. Typical pattern:
+  ```javascript
+  (function () {
+    const state = { cache: [] };
+
+    window.appSideMenu.setViewRefresh("dashboard", function () {
+      OpenForum.debug("INFO", "Refreshing dashboard data");
+      // fetch + render logic
+    });
+
+    window.appSideMenu.setViewClose("dashboard", function () {
+      OpenForum.debug("INFO", "Cleaning dashboard timers");
+      // teardown logic
+    });
+  })();
+  ```
+- If a view needs static copy, supply a `*.wiki.fragment` alternative—the runtime auto-detects `.html` vs `.wiki` when `src` is absent.
+- When no external fragment is required, populate the view by giving the SideMenu entry an `elementId` and injecting markup server-side; the script copies the innerHTML into the hidden container.
+
+Progressive Web App Add-ons
+---------------------------
+- Follow the install prototype: provide `manifest.json` with `name`, `short_name`, `start_url`, colour fields, and icon references. Place icons in the same folder.
+- Add `service-worker.js` stubs that cache the view fragments and JS files with `self.addEventListener("install" | "fetch", ...)`.
+- In `page.js`, register the service worker inside the initialiser, guarding for `navigator.serviceWorker`.
+- Wire an install CTA similar to the experiment’s `<a href=' ' onClick='triggerPrompt(); return false;'>Install App</a>`, capturing the `beforeinstallprompt` event and deferring `prompt()` until the user taps the button.
+
+Response Template
+-----------------
+When the user asks for an app:
+1. Confirm requirements (views, data, PWA extras) and highlight any incremental delivery milestones.
+2. Present a file plan (path → purpose) before dumping code.
+3. Emit file contents grouped by filename. Use fenced code blocks with info strings (`html`, `javascript`, `json`, etc.).
+4. Highlight TODOs for integrations you cannot finish (e.g. real API endpoints) as inline comments.
+5. Close with quick instructions: how to deploy (copy folder to target page path), which pageBuilder actions to run (`update`/`refresh`), optional commands to test service worker, and pointers to SideMenu hooks for further expansion.
+
+Quality Gates
+-------------
+- Always set one view as `default: true`.
+- Keep IDs kebab- or camel-case; they map directly to DOM container IDs and hash routes.
+- Ensure every JS file is ASCII and includes concise comments only when non-obvious.
+- Cross-reference new assets in `page.css` or `manifest.json` so cache manifests stay in sync.
+- If you introduce network calls, wrap them in `JSON.get/post` helpers so they align with OpenForum conventions.

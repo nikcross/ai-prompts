@@ -1,0 +1,66 @@
+SideMenu.js — Open Forum Side Menu Implementation
+=================================================
+
+Use these notes when you need quick context on how `content/source/OpenForum/Javascript/Application/SideMenu.js` wires the side menu experience inside Open Forum applications.
+
+Configuration Schema
+--------------------
+The script expects a JSON object with a top-level `sideMenu` array. Each element is either a view definition or a category grouping:
+
+```json
+{
+  "sideMenu": [
+    {
+      "view": "Human title shown in the menu",
+      "id": "uniqueViewId",
+      "script": "optional/path/to/script.js",
+      "src": "optional/path/to/view.fragment",
+      "default": true,
+      "pageName": "optional page namespace",
+      "init": "optional initFunction()"
+    },
+    {
+      "category": "Heading in the menu",
+      "views": [
+        { "view": "Nested view title", "id": "nestedViewId", "default": false }
+      ]
+    }
+  ]
+}
+```
+
+Key Behaviours
+--------------
+- Registers each SideMenu instance in the global `OpenForum.sideViews` array and scans the DOM twice to pick up new elements.
+- Autogenerates the menu HTML inside the provided container, and builds hidden view containers under `applicationViewId`.
+- Resolves missing `src` or `script` values by probing for fragments under `pageName` (e.g. `viewId.html.fragment`, `viewId.wiki.fragment`, `pageName/viewId.js`).
+- Falls back to a shared `pageName` (global variable set before construction) when a view omits its own, so shared assets can live in a common folder.
+- Uses `DependencyService` to lazy-load scripts, runs optional `init` callbacks, and defers marking a view as ready until its dependencies complete.
+- Tracks the currently selected view via `location.hash`, ignoring hash changes triggered by the script itself to prevent recursion.
+- Supports inline content by allowing `elementId` in a view definition; the element's inner HTML becomes the view body.
+- Adds an OpenForum tab for each view (`OpenForum.addTab`) so other services can bind to the view lifecycle.
+
+Related Assets
+--------------
+- HTML shell: `content/source/OpenForum/Javascript/Application/side-menu-page.html.template` — Foundation off-canvas layout that exposes `offCanvasMenu` and `applicationView`.
+- Styling: `content/source/OpenForum/Javascript/Application/side-menu-page.css` — basic colors and typography for the side menu page template.
+
+Integration Tips
+----------------
+- Include the script with `OpenForum.includeScript("/OpenForum/Javascript/Application/SideMenu.js");` before instantiating the menu.
+- Instantiate with `new SideMenu(menuElementId, applicationViewId, sideMenuConfig, optionalCallback);` after setting `pageName`.
+- Ensure view IDs are unique; the script uses them for DOM container IDs, dependency tracking, and hash routing.
+- Provide at least one `default: true` view so the menu shows content immediately. Without it, the initial view remains blank until a user selection.
+- When mixing HTML fragments and wiki sources, keep `sideMenuConfig.sideMenu[i].src` to the bare filename (no leading slash); the script prefixes `pageName/` automatically.
+
+Runtime Hooks
+-------------
+- `setViewRefresh(viewId, fn)` runs `fn` every time the view becomes active; use this for live data reloads.
+- `setViewClose(viewId, fn)` runs just before a view is hidden, giving you a place to tear down timers or listeners.
+- `closeOnShow(boolean)` controls Foundation's off-canvas behavior; `true` (default) collapses the menu after selection, while `false` leaves it pinned.
+- `addMenuOption(functionText, label, icon)` appends utility links under `#offCanvasMenu`, using the shared icon sprite at `OpenForum/Images/icons/png`.
+
+Hash Routing Notes
+------------------
+- Each view registers a hash listener through `OpenForum.addHashCall`, keyed off the escaped `view.title`/`view.view`. Manual `window.location.hash` changes therefore drive `showView`.
+- `showView(viewId)` updates the hash with the view label and respects custom `close`/`refresh` hooks before and after the transition.
