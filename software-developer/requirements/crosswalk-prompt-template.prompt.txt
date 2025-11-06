@@ -13,7 +13,7 @@ Required Inputs Before You Run The Prompt
   * SectionNumber (e.g., 1, 2, …),
   * Heading (concise title),
   * Narrative (1–2 paragraphs + optional bullets/ordered lists),
-  * ImplementationReferences (list of `Label | IDELink` pairs; use `jetbrains://idea/navigate/reference?project={{IDE_PROJECT_NAME}}&path=…` links and include `&line=…` when a precise anchor is known; fall back to repository-relative paths only if an IDE deep link is impossible),
+  * ImplementationReferences (list of `Label | IDELink` pairs; use `jetbrains://idea/navigate/reference?project={{IDE_PROJECT_NAME}}&path=…` links and append `:LineNumber` to the path when a precise anchor is known; fall back to repository-relative paths only if an IDE deep link is impossible),
   * OptionalConfigAnchors (list of config IDs referenced in narrative, if any),
   * OptionalTests (list of important test references, if any),
   * OptionalNotes (anything the model must mention, e.g., performance caveats).
@@ -52,7 +52,7 @@ You are a senior technical writer preparing a self-contained HTML document struc
        • Render the narrative paragraphs; preserve bullet or ordered lists if provided.
        • When referencing configs, wrap the anchor id in `<a href="#cfg-…"><code>…</code></a>`.
      * The right `<td class="refs">` must contain a `<h3>` titled "Key Implementation".
-       • Output a `<ul>` where each list item is `{{Label}} — {{ShortDescription}}` and links to the provided JetBrains reference. Format every deep link as `jetbrains://idea/navigate/reference?project={{IDE_PROJECT_NAME}}&path=…` and append `&line={{LineNumber}}` whenever a specific anchor is relevant. Use repository-relative plain text only when an IDE deep link cannot be produced.
+       • Output a `<ul>` where each list item is `{{Label}} — {{ShortDescription}}` and links to the provided JetBrains reference. Format every deep link as `jetbrains://idea/navigate/reference?project={{IDE_PROJECT_NAME}}&path=…` and append `:{{LineNumber}}` to the path whenever a specific anchor is relevant. Use repository-relative plain text only when an IDE deep link cannot be produced.
        • If `OptionalTests` is supplied, append a `<h3>` with "Key Tests" and list them similarly, using the same JetBrains link pattern with line numbers where available.
        • If `OptionalNotes` exists, add a muted `<p>` or list communicating the note.
 
@@ -73,7 +73,7 @@ You are a senior technical writer preparing a self-contained HTML document struc
    - Ensure semantic HTML (no stray tags, properly nested lists).
    - Keep prose polished, active voice, present tense; maintain a confident, explanatory tone.
    - Preserve readability: avoid walls of text, break dense ideas into bullets, and keep list indentation consistent.
-   - Verify every link uses `jetbrains://idea/navigate/reference?project={{IDE_PROJECT_NAME}}&path=…` with `&line=…` anchors when applicable, or falls back to a repository-relative path only if a deep link is unavailable; do not invent placeholders.
+   - Verify every link uses `jetbrains://idea/navigate/reference?project={{IDE_PROJECT_NAME}}&path=…` with `:LineNumber` suffixes when applicable, or falls back to a repository-relative path only if a deep link is unavailable; do not invent placeholders.
    - Do not include any explanatory text outside of the HTML document.
 
 Inputs Provided:
