@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "title": "Object Model",
+  "type": "object",
+  "properties": {
+    "entities": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/entity" }
+    },
+    "relationships": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/relationship" }
+    }
+  },
+  "required": ["entities"],
+
+  "$defs": {
+    "entity": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "fields": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/field" }
+        },
+        "methods": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/method" }
+        },
+        "extensions": {
+          "type": "object",
+          "description": "Optional tool-specific metadata, e.g. graphical layout, color, notes"
+        }
+      },
+      "required": ["id", "name"]
+    },
+
+    "field": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "multiplicity": { "type": "string", "description": "e.g., 1, 0..1, 0..*, 1..*" },
+        "visibility": { "enum": ["public", "private", "protected", "package"] },
+        "default": {}
+      },
+      "required": ["name", "type"]
+    },
+
+    "method": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "parameters": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/field" }
+        },
+        "returnType": { "type": "string" },
+        "visibility": { "enum": ["public", "private", "protected", "package"] }
+      },
+      "required": ["name"]
+    },
+
+    "relationship": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["association", "aggregation", "composition", "inheritance"] },
+        "source": { "type": "string", "description": "entity id" },
+        "target": { "type": "string", "description": "entity id" },
+        "multiplicity": { "type": "string", "description": "source..target multiplicity" },
+        "extensions": {
+          "type": "object",
+          "description": "Optional metadata (e.g., graphical line style, arrow type, color)"
+        }
+      },
+      "required": ["type", "source", "target"]
+    }
+  }
+}
