@@ -49,7 +49,7 @@ You are a senior technical writer preparing a self-contained HTML document struc
      * Insert a `<tr>` where the left `<td class="section">` contains a `<section id="slug">`.
        • The section `id` should be `section-{{SectionNumber}}` (kebab-case the heading if you need a human-friendly anchor).
        • Use `<h2>{{SectionNumber}}. {{Heading}}</h2>`.
-       • Render the narrative paragraphs; preserve bullet or ordered lists if provided.
+       • Render the narrative paragraphs; preserve bullet or ordered lists if provided. Inline references to source code or configuration must be clickable `<a href="jetbrains://idea/navigate/reference?project={{IDE_PROJECT_NAME}}&path=…">` links so both columns provide IntelliJ deep links; append `:LineNumber` when you have an exact location.
        • When referencing configs, wrap the anchor id in `<a href="#cfg-…"><code>…</code></a>`.
      * The right `<td class="refs">` must contain a `<h3>` titled "Key Implementation".
        • Output a `<ul>` where each list item is `{{Label}} — {{ShortDescription}}` and links to the provided JetBrains reference. Format every deep link as `jetbrains://idea/navigate/reference?project={{IDE_PROJECT_NAME}}&path=…` and append `:{{LineNumber}}` to the path whenever a specific anchor is relevant. Use repository-relative plain text only when an IDE deep link cannot be produced.
