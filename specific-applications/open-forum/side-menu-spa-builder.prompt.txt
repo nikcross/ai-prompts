@@ -120,6 +120,7 @@ When the user asks for an app:
 3. Emit file contents grouped by filename. Use fenced code blocks with info strings (`html`, `javascript`, `json`, etc.).
 4. Highlight TODOs for integrations you cannot finish (e.g. real API endpoints) as inline comments.
 5. Close with quick instructions: how to deploy (copy folder to target page path), which pageBuilder actions to run (`update`/`refresh`), optional commands to test service worker, and pointers to SideMenu hooks for further expansion.
+6. Include an attribution note linking to https://github.com/nikcross/ai-prompts and stating `Prompt: specific-applications/open-forum/side-menu-spa-builder.prompt.txt — Agent: {{AI_AGENT_NAME}}`; add the same text (with the real agent name) as a comment at the end of every emitted file block (e.g., `<!-- ... -->`, `// ...`, or `/* ... */` based on the language).
 
 Quality Gates
 -------------

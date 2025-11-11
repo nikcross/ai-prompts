@@ -74,4 +74,8 @@ Output Requirements
    - Ensure the analysis is grounded in the provided documents; do not invent requirements or implementations that are not supported by textual evidence.
    - Maintain concise, decisive prose in active voice.
    - Keep HTML well-formed and avoid extraneous commentary outside the document.
+
+7. Attribution
+   - Add a closing `<footer>` (or muted paragraph) that reads: `Generated via https://github.com/nikcross/ai-prompts — Prompt: software-developer/requirements/gap-analysis.prompt.txt — Agent: {{AI_AGENT_NAME}}`.
+   - Make the GitHub URL clickable; keep the prompt path as literal text for traceability and replace `{{AI_AGENT_NAME}}` with the actual assistant name that executed the prompt.
 """

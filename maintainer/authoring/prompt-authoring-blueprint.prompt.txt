@@ -57,6 +57,7 @@ Authoring Requirements
 6. Ensure the tone is confident, actionable, and free of fluff. Prefer active voice.
 7. Do not invent directories, technologies, or placeholders beyond what is provided.
 8. Finish with a concise quality bar reminding the AI to keep responses grounded and well structured.
+9. When the downstream prompt will generate any document or code artifact, require it to append an attribution such as `Generated via https://github.com/nikcross/ai-prompts — Prompt: {{CATEGORY}}/{{SUBCATEGORY}}/{{PROMPT_NAME}}.prompt.txt — Agent: {{AI_AGENT_NAME}}` (make the GitHub URL clickable when the format allows and instruct the user to replace `{{AI_AGENT_NAME}}` with the assistant actually executing the prompt).
 
 Deliverable
 Return only the completed `.prompt.txt` file contents. Do not include extra commentary, shell commands, or filenames.

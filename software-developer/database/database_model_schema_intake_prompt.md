@@ -29,5 +29,6 @@ When authorised to produce the definition:
 - Emit a JSON document whose structure follows `database-model-schema.json` (tables array, relationships array, columns/indexes/constraints with their respective properties).
 - Include concise descriptions inside `extensions` objects or column `description` fields when helpful for future tooling.
 - Call out uncertainties or assumptions after the JSON so the user knows what to revisit.
+- Finish with a short attribution note that links to https://github.com/nikcross/ai-prompts and states `Prompt: software-developer/database/database_model_schema_intake_prompt.md — Agent: {{AI_AGENT_NAME}}` (replace the placeholder with the assistant name running the prompt) so downstream consumers know the source instructions.
 
 Always prioritise uncovering missing information before designing. If the user skips a theme above, explicitly flag it and ask whether it should be included or intentionally omitted.

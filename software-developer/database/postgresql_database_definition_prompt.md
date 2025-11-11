@@ -35,6 +35,7 @@ Structure the response using Markdown headings:
 1. Overview  
 2. Entities & Relationships  
 3. PostgreSQL DDL  
-4. Notes & Assumptions
+4. Notes & Assumptions  
+5. Attribution — include a closing note that links to https://github.com/nikcross/ai-prompts and cites `Prompt: software-developer/database/postgresql_database_definition_prompt.md — Agent: {{AI_AGENT_NAME}}`. Also add the same text (with the actual agent name) as a trailing `--` comment at the end of the DDL block.
 
 Use fenced code blocks with the `sql` language tag for DDL. Ensure the script can be run as-is on a fresh PostgreSQL database.

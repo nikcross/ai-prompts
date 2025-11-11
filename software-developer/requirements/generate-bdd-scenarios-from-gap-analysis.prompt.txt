@@ -83,6 +83,10 @@ Output Requirements
       - Be visually consistent with a modern gap-analysis report.
   • All content must be cleanly formatted, self-contained, and easily read by both technical and non-technical users.
 
+Attribution
+  • Append a final attribution line to the `.feature` output that reads `# Generated via https://github.com/nikcross/ai-prompts — Prompt: software-developer/requirements/generate-bdd-scenarios-from-gap-analysis.prompt.txt — Agent: {{AI_AGENT_NAME}}` (for Markdown/plain formats, keep the same text even if the `#` is treated as a heading/comment; replace `{{AI_AGENT_NAME}}` with the actual assistant name used).
+  • Add a closing `<footer>` (or muted paragraph) to the HTML output with the same text, make the GitHub URL clickable, and substitute the real agent name.
+
 Quality Bar
   • Concise, active-voice steps describing clear outcomes.
   • Atomic scenarios—each verifies one distinct behaviour.

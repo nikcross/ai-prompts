@@ -76,6 +76,10 @@ You are a senior technical writer preparing a self-contained HTML document struc
    - Verify every link uses `jetbrains://idea/navigate/reference?project={{IDE_PROJECT_NAME}}&path=…` with `:LineNumber` suffixes when applicable, or falls back to a repository-relative path only if a deep link is unavailable; do not invent placeholders.
    - Do not include any explanatory text outside of the HTML document.
 
+8. Attribution
+   - Append a `<footer>` (muted text is fine) after the summary row that states: `Generated via https://github.com/nikcross/ai-prompts — Prompt: software-developer/requirements/crosswalk-prompt-template.prompt.txt — Agent: {{AI_AGENT_NAME}}`.
+   - Ensure the GitHub URL is a clickable link, keep the prompt path as plain text, and replace `{{AI_AGENT_NAME}}` with the actual assistant name used to run the prompt.
+
 Inputs Provided:
   • PROJECT_TITLE: {{PROJECT_TITLE}}
   • PROJECT_SUMMARY: {{PROJECT_SUMMARY}}

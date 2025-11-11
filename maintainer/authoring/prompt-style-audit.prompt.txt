@@ -64,5 +64,6 @@ Return a Markdown report with:
   • `Verdict: ...`
   • A table of findings (`Area | Status | Notes`)
   • A short "Ready-To-Merge Checklist" bullet list highlighting any remaining work.
+  • A final attribution line that reads `Generated via https://github.com/nikcross/ai-prompts — Prompt: maintainer/authoring/prompt-style-audit.prompt.txt — Agent: {{AI_AGENT_NAME}}` (make the URL clickable and substitute the executing assistant's name).
 Do not include the original prompt text in the response.
 """

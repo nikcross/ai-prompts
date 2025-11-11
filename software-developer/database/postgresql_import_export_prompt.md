@@ -37,5 +37,6 @@ Organise the response with Markdown headings:
 2. Export Script (`sql` fenced block)  
 3. Import Script (`sql` fenced block)  
 4. Run & Validation Notes
+5. Attribution — add a concluding paragraph that links to https://github.com/nikcross/ai-prompts and states `Prompt: software-developer/database/postgresql_import_export_prompt.md — Agent: {{AI_AGENT_NAME}}`, and append the same text (with the actual agent name substituted) as a trailing `--` comment inside both SQL scripts.
 
 Ensure the scripts are self-contained, parameterised with placeholders, and safe to execute in pgAdmin or command-line `psql`.

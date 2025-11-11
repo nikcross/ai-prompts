@@ -7,3 +7,4 @@ When writing JUnit tests for this project, follow these conventions:
 5. Assert precise outcomes that demonstrate the scenario. Avoid verifying logging.
 6. Use JUnit (`org.junit.jupiter.api`).
 7. Place new test sources in the appropriate `src/.../test/java` tree.
+8. Insert a comment at the top of each generated/updated test class (immediately before the `class` declaration or right after the imports) that reads `// Generated via https://github.com/nikcross/ai-prompts — Prompt: software-developer/testing/java-test-format.prompt.txt — Agent: {{AI_AGENT_NAME}}`, replacing `{{AI_AGENT_NAME}}` with the assistant name executing the prompt.

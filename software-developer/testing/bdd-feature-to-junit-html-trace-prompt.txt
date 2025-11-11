@@ -116,6 +116,10 @@ Output Requirements
   • When appending, add new rows only — avoid duplication
   • When overwriting, recreate the entire document
 
+Attribution
+  • Append a final block or line comment in the generated Java file that states `Generated via https://github.com/nikcross/ai-prompts — Prompt: software-developer/testing/bdd-feature-to-junit-html-trace-prompt.txt — Agent: {{AI_AGENT_NAME}}` (replace `{{AI_AGENT_NAME}}` with the assistant name used).
+  • Add a closing `<footer>` (or muted paragraph) to the HTML output with the same text, ensuring the GitHub URL is a clickable link, the prompt path remains plain text, and the real agent name is present.
+
 Quality Bar
   • JUnit and HTML outputs must be clean, readable, and ready to commit.
   • IDE links should open correctly (approximate line numbers acceptable).

@@ -28,5 +28,6 @@ Make sure you explore each of the following areas (call out explicitly if the us
 - The final answer must include a JSON document matching `object-model-schema.json` (entities list with fields/methods/extensions plus relationships array).
 - Provide brief bullet notes afterwards for assumptions, unresolved questions, or recommended next steps.
 - If required data is missing, explicitly state what is missing and ask for it instead of guessing.
+- Close every delivery with a short attribution note that links to https://github.com/nikcross/ai-prompts and cites `Prompt: software-developer/programming/object_model_intake_prompt.md — Agent: {{AI_AGENT_NAME}}`, replacing the placeholder with the assistant name actually executing the prompt so the provenance is clear to downstream readers.
 
 Always prioritise understanding over speed. The quality of the questions determines the quality of the model.
