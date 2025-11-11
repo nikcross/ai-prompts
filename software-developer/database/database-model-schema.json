@@ -1,0 +1,252 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open-forum.onestonesoup.org/HomeLab/DBModelView/database-model-schema.json",
+  "title": "Database Model",
+  "description": "JSON Schema for relational database models",
+  "type": "object",
+  "properties": {
+    "tables": {
+      "type": "array",
+      "description": "Collection of database tables",
+      "items": { "$ref": "#/$defs/table" }
+    },
+    "relationships": {
+      "type": "array",
+      "description": "Explicit relationships between tables",
+      "items": { "$ref": "#/$defs/relationship" }
+    }
+  },
+  "required": ["tables"],
+
+  "$defs": {
+    "table": {
+      "type": "object",
+      "description": "A database table with columns, indexes, and constraints",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the table (defaults to name if omitted)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Table name as it appears in the database"
+        },
+        "columns": {
+          "type": "array",
+          "description": "Column definitions",
+          "items": { "$ref": "#/$defs/column" }
+        },
+        "indexes": {
+          "type": "array",
+          "description": "Index definitions",
+          "items": { "$ref": "#/$defs/index" }
+        },
+        "constraints": {
+          "type": "array",
+          "description": "Multi-column constraints (unique, check, exclusion)",
+          "items": { "$ref": "#/$defs/constraint" }
+        },
+        "primaryKey": {
+          "type": "object",
+          "description": "Composite primary key definition",
+          "properties": {
+            "columns": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Column names that form the composite primary key"
+            }
+          },
+          "required": ["columns"]
+        },
+        "extensions": {
+          "type": "object",
+          "description": "Optional tool-specific metadata, e.g. description, notes, datasource, graphical layout, color"
+        }
+      },
+      "required": ["name", "columns"]
+    },
+
+    "column": {
+      "type": "object",
+      "description": "A table column with its data type and constraints",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Column name"
+        },
+        "type": {
+          "type": "string",
+          "description": "Data type (e.g., uuid, text, integer, timestamptz, boolean)"
+        },
+        "primaryKey": {
+          "type": "boolean",
+          "description": "Whether this column is a primary key"
+        },
+        "unique": {
+          "type": "boolean",
+          "description": "Whether values must be unique"
+        },
+        "nullable": {
+          "type": "boolean",
+          "description": "Whether NULL values are allowed (default: true)"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Alias for nullable=false"
+        },
+        "notNull": {
+          "type": "boolean",
+          "description": "Alias for nullable=false"
+        },
+        "default": {
+          "description": "Default value expression (can be string, number, boolean, or null)"
+        },
+        "foreignKey": {
+          "oneOf": [
+            { "type": "string", "description": "Simple reference as 'table.column'" },
+            { "$ref": "#/$defs/foreignKey" }
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the column"
+        },
+        "generated": {
+          "enum": ["ALWAYS", "BY DEFAULT"],
+          "description": "Generated column specification"
+        }
+      },
+      "required": ["name", "type"]
+    },
+
+    "foreignKey": {
+      "type": "object",
+      "description": "Foreign key reference to another table",
+      "properties": {
+        "targetTable": {
+          "type": "string",
+          "description": "Referenced table name or id"
+        },
+        "targetColumn": {
+          "type": "string",
+          "description": "Referenced column name"
+        },
+        "table": {
+          "type": "string",
+          "description": "Alias for targetTable"
+        },
+        "column": {
+          "type": "string",
+          "description": "Alias for targetColumn"
+        },
+        "onDelete": {
+          "enum": ["CASCADE", "SET NULL", "SET DEFAULT", "RESTRICT", "NO ACTION"],
+          "description": "Action on delete"
+        },
+        "onUpdate": {
+          "enum": ["CASCADE", "SET NULL", "SET DEFAULT", "RESTRICT", "NO ACTION"],
+          "description": "Action on update"
+        },
+        "name": {
+          "type": "string",
+          "description": "Foreign key constraint name"
+        }
+      }
+    },
+
+    "index": {
+      "type": "object",
+      "description": "Database index for performance optimization",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Index name"
+        },
+        "columns": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Column names included in the index"
+        },
+        "expression": {
+          "type": "string",
+          "description": "Expression for functional/computed indexes (e.g., 'lower(email)')"
+        },
+        "unique": {
+          "type": "boolean",
+          "description": "Whether the index enforces uniqueness"
+        },
+        "method": {
+          "type": "string",
+          "description": "Index method (e.g., btree, hash, gin, gist, brin)"
+        },
+        "where": {
+          "type": "string",
+          "description": "Partial index filter condition"
+        }
+      },
+      "required": ["name"]
+    },
+
+    "constraint": {
+      "type": "object",
+      "description": "Multi-column constraint",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Constraint name"
+        },
+        "type": {
+          "enum": ["unique", "check", "exclusion"],
+          "description": "Constraint type"
+        },
+        "columns": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Column names involved in the constraint",
+          "minItems": 1
+        },
+        "expression": {
+          "type": "string",
+          "description": "Check constraint expression (for type='check')"
+        }
+      },
+      "required": ["name", "type", "columns"]
+    },
+
+    "relationship": {
+      "type": "object",
+      "description": "Relationship between tables",
+      "properties": {
+        "type": {
+          "enum": ["foreignKey", "replication", "materializes", "view", "inheritance"],
+          "description": "Type of relationship"
+        },
+        "sourceTable": {
+          "type": "string",
+          "description": "Source table id or name"
+        },
+        "targetTable": {
+          "type": "string",
+          "description": "Target table id or name"
+        },
+        "sourceColumn": {
+          "type": "string",
+          "description": "Source column name (for foreign keys)"
+        },
+        "targetColumn": {
+          "type": "string",
+          "description": "Target column name (for foreign keys)"
+        },
+        "fkName": {
+          "type": "string",
+          "description": "Foreign key constraint name"
+        },
+        "kind": {
+          "type": "string",
+          "description": "Alias for type"
+        }
+      },
+      "required": ["type", "sourceTable", "targetTable"]
+    }
+  }
+}
