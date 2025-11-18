@@ -1,0 +1,67 @@
+Prompt Template — Flow Walkthrough HTML
+=======================================
+
+Purpose
+-------
+Use this prompt when you need a reusable HTML document that narrates a technical flow (e.g., controller → service → downstream system) step by step with implementation links. Before you run it, ask the requestor for the specific flow’s key points to highlight so those themes can be emphasized in the output.
+
+Required Inputs Before You Run The Prompt
+-----------------------------------------
+- FLOW_TITLE: short name for the flow document (e.g., "Policy Purchase to SSP Cleanup").
+- FLOW_SUMMARY: 1–2 paragraph overview of what the flow covers and why it matters.
+- CONTEXT_OVERVIEW: bullet list or short paragraphs describing background systems, repositories, or constraints.
+- FLOW_STEPS: ordered list where each item contains
+  * StepNumber (1, 2, …),
+  * Heading (concise label),
+  * Narrative (1–2 paragraphs describing what happens in this step; include inline IDE links when possible),
+  * References (list of `Label | IDELink` entries, JetBrains deep links preferred),
+  * OptionalNotes (warnings, timing details, edge cases).
+- KEY_POINTS: 2–3 bullets provided by the user highlighting what must be called out (e.g., "confirm synchronous call", "state ordering before policy activation").
+- FUTURE_CONSIDERATIONS (optional): bullet list of enhancements or monitoring hooks to document.
+- SUMMARY_PARAGRAPH: closing statement reiterating the flow’s outcome.
+- STYLE_NOTES (optional): override colors or tone if the default dark theme should change.
+- IDE_PROJECT_NAME: IntelliJ project identifier for deep links.
+
+How To Use
+----------
+1. Gather the inputs above (explicitly request the KEY_POINTS list from the user if it was not already provided).
+2. Replace each placeholder in the prompt body with actual values. Use fenced blocks for multi-line text when needed.
+3. Provide the prompt to the model and request a single self-contained HTML document in return.
+4. Review the output to ensure links resolve and that the highlighted key points appear in the narrative.
+
+Prompt Body (copy everything inside the quotes)
+-----------------------------------------------
+"""
+You are a senior systems engineer documenting a technical flow. Produce a self-contained HTML5 document that pairs narrative descriptions with implementation references. Follow these directives exactly.
+
+Inputs
+  • Flow Title: {{FLOW_TITLE}}
+  • Flow Summary: {{FLOW_SUMMARY}}
+  • Context Overview: {{CONTEXT_OVERVIEW}}
+  • Flow Steps: {{FLOW_STEPS}}
+  • Key Points to Highlight: {{KEY_POINTS}}
+  • Future Considerations: {{FUTURE_CONSIDERATIONS}}
+  • Summary Paragraph: {{SUMMARY_PARAGRAPH}}
+  • Style Notes: {{STYLE_NOTES}}
+  • IDE Project Name: {{IDE_PROJECT_NAME}}
+
+1. Emit valid HTML5 with `<!doctype html>`, `<html lang="en">`, and `<head>` containing `<meta charset="utf-8">`, `<meta name="viewport"...>`, and `<title>{{FLOW_TITLE}} — Flow Walkthrough</title>`.
+2. Include a `<style>` block that applies a dark palette (body background `#0b0d10`, panel `#12161b`, text `#e7ecf3`, emerald/blue accents, thin borders). Adjust only if `{{STYLE_NOTES}}` requests otherwise. Use `.wrap { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; font-family: system-ui; line-height: 1.6; }`.
+3. Body layout:
+   - `<h1>{{FLOW_TITLE}} — Flow Walkthrough</h1>`
+   - Paragraph using `{{FLOW_SUMMARY}}` explaining the scope.
+   - A short `<section>` summarizing `{{CONTEXT_OVERVIEW}}` (bullets are fine).
+   - Add a callout box listing `{{KEY_POINTS}}` under a heading “Key Highlights” so the reader sees what to focus on.
+   - Create a `<table>` with headers “Narrative Flow” and “Implementation References”. For each item in `{{FLOW_STEPS}}`:
+     • Left column: `<section id="step-{{StepNumber}}">` with `<h2>{{StepNumber}}. {{Heading}}</h2>` followed by the provided narrative. Preserve bullet lists if present and embed inline JetBrains links as `<a href="jetbrains://idea/navigate/reference?project={{IDE_PROJECT_NAME}}&path=...">`.
+     • Right column: `<h3>Key Implementation</h3>` containing a `<ul>` of references using the provided labels and links. Use JetBrains links with `:LineNumber` when available, falling back to repo-relative paths only if necessary.
+     • If `OptionalNotes` exists, include a muted `<p>` (class “muted”) under the reference list.
+4. After the steps table, add a “Future Considerations” section only if `{{FUTURE_CONSIDERATIONS}}` is non-empty; list each bullet and link to files when appropriate.
+5. Add a closing `<section id="summary">` with `<h2>Summary</h2>` containing `{{SUMMARY_PARAGRAPH}}`.
+6. Quality bar:
+   - Ensure `{{KEY_POINTS}}` are explicitly addressed somewhere in the narrative.
+   - Keep prose direct and confident; avoid speculative language unless uncertainty is noted in `OptionalNotes`.
+   - Validate that every JetBrains link uses `jetbrains://idea/navigate/reference?project={{IDE_PROJECT_NAME}}&path=…`.
+7. Attribution:
+   - Append a `<footer>` reading `Generated via https://github.com/nikcross/ai-prompts — Prompt: software-developer/requirements/flow-walkthrough.prompt.txt — Agent: {{AI_AGENT_NAME}}`. Make the GitHub URL clickable and replace `{{AI_AGENT_NAME}}` with the actual assistant name.
+"""

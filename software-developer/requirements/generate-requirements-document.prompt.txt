@@ -1,0 +1,98 @@
+Prompt Template — Requirements Document HTML
+===========================================
+
+Purpose
+-------
+Use this prompt when you need a fresh product/feature requirements document rendered as a self-contained HTML page that matches the dark-theme aesthetic used by the other prompts in this directory.
+
+Required Inputs Before You Run The Prompt
+-----------------------------------------
+- DOCUMENT_TITLE: terse, descriptive name for the requirements package.
+- PROJECT_CONTEXT: 2–3 paragraphs capturing business problem, drivers, and current state constraints.
+- OBJECTIVES: ordered list of measurable goals or success criteria.
+- SCOPE: structure with two arrays: `InScope` and `OutOfScope` bullet lists.
+- CAPABILITIES: ordered list; for each capability provide:
+  * `ID` (e.g., REQ-001),
+  * `Title`,
+  * `Narrative` (2–3 paragraphs describing behaviour, edge cases, rationale),
+  * `UserStories` (list of Given/When/Then or standard user stories),
+  * `AcceptanceCriteria` (bullet list of verifiable checks),
+  * `Dependencies` (list of other IDs or external systems),
+  * `Priority` (MoSCoW or High/Med/Low),
+  * `OpenQuestions` (optional list of unanswered items),
+  * `Owner` (team or persona accountable for delivery).
+- NON_FUNCTIONAL: list of performance, security, operability, and compliance requirements (each item should have a short name, description, and metric/threshold if applicable).
+- DATA_CONSIDERATIONS: optional list describing storage, privacy, retention, or migration requirements.
+- RISKS_AND_ASSUMPTIONS: list of risk entries with `Description`, `Impact`, `Mitigation`, and optional `Status`.
+- TIMELINE: optional milestone list with target dates.
+- REFERENCES: optional list of related documents/links for appendix.
+- STYLE_NOTES (optional): palette or tone overrides.
+- AI_AGENT_NAME: assistant identifier for attribution footer.
+
+How To Use
+----------
+1. Gather the inputs above. Use triple-quoted blocks for any multi-paragraph fields when you substitute values.
+2. Replace every `{{PLACEHOLDER}}` in the prompt body with your collected inputs.
+3. Provide the entire prompt (including the quoted block) to the model.
+4. Review the generated HTML for completeness and accuracy before publishing.
+
+Prompt Body (copy everything inside the quotes)
+-----------------------------------------------
+"""
+You are a senior product requirements lead authoring a polished HTML requirements document. Follow the directives exactly.
+
+Inputs
+  • Title: {{DOCUMENT_TITLE}}
+  • Project Context: {{PROJECT_CONTEXT}}
+  • Objectives: {{OBJECTIVES}}
+  • Scope: {{SCOPE}}
+  • Capabilities: {{CAPABILITIES}}
+  • Non-Functional Requirements: {{NON_FUNCTIONAL}}
+  • Data Considerations: {{DATA_CONSIDERATIONS}}
+  • Risks & Assumptions: {{RISKS_AND_ASSUMPTIONS}}
+  • Timeline: {{TIMELINE}}
+  • References: {{REFERENCES}}
+  • Style Notes: {{STYLE_NOTES}}
+
+Global Output Requirements
+1. Emit a complete HTML5 document with `<!doctype html>`, `<html lang="en">`, `<head>` containing `<meta charset="utf-8">`, `<meta name="viewport" content="width=device-width, initial-scale=1">`, and `<title>{{DOCUMENT_TITLE}} — Requirements</title>`.
+2. Embed a `<style>` block establishing the established dark theme palette (body background `#0b0d10`, panels `#12161b`, text `#e7ecf3`, accent greens/blues, subtle borders and drop shadows). Allow overrides only if `{{STYLE_NOTES}}` explicitly changes colors or typography.
+3. Wrap main content in a centered `.wrap` (`max-width: 1100px; padding: 48px 32px 96px; font-family: "Segoe UI", -apple-system, BlinkMacSystemFont`). Maintain line-height 1.65.
+
+Document Structure
+1. Cover Section
+   - `<h1>{{DOCUMENT_TITLE}}</h1>` followed by a short tagline (derive from `{{PROJECT_CONTEXT}}`).
+   - Add a two-column summary card: left column summarises context, right column lists key objectives as numbered badges.
+2. Scope Section
+   - Include `<section id="scope">` containing two cards: "In Scope" and "Out of Scope" bullet lists sourced from `{{SCOPE}}`.
+3. Capability Requirements Matrix
+   - For each entry in `{{CAPABILITIES}}`, render a card with:
+     • Header `{{ID}} — {{Title}}` plus a pill showing `Priority`.
+     • Narrative paragraphs.
+     • Subheading "User Stories" with ordered or bulleted list using provided `UserStories` (preserve Given/When/Then formatting).
+     • Subheading "Acceptance Criteria" with bullet list.
+     • Compact meta-row listing `Owner`, `Dependencies` (link to other IDs using `#{{ID}}` anchors when they exist), and `Open Questions` (if provided, show as muted list; otherwise display "None").
+     • Insert subtle horizontal rule between capability cards.
+4. Non-Functional Section
+   - Create a definition list or table enumerating `{{NON_FUNCTIONAL}}`, showing metric/thresholds in `<code>` or `<span class="metric">` styling.
+   - If `{{DATA_CONSIDERATIONS}}` is provided, append a sub-section summarising each item (privacy classification, retention, encryption, etc.).
+5. Risks & Assumptions
+   - Render as a table with columns: ID (auto-numbered), Description, Impact, Mitigation, Status. Highlight rows with `Impact` containing "High" in accent red.
+6. Timeline & Milestones (optional)
+   - When `{{TIMELINE}}` is non-empty, build a horizontal timeline using flex cards with milestone title and target date.
+7. References / Appendix (optional)
+   - When `{{REFERENCES}}` exists, output a list of links or document titles under `<section id="references">`.
+8. Closing Summary
+   - End with a paragraph recapping the intent and reiterating success metrics. Encourage readers to align capability delivery with objectives.
+
+Quality & Tone
+- Use confident, active voice. Avoid fluff; emphasise clarity and verifiability.
+- Preserve any markdown-style lists provided in inputs; convert them to semantic HTML lists when necessary.
+- Validate inter-section anchors (`id="req-{{ID}}"`) so cross references work.
+- Do not fabricate IDs or data beyond what inputs provide.
+
+Attribution
+- Append a `<footer>` stating: `Generated via https://github.com/nikcross/ai-prompts — Prompt: software-developer/requirements/generate-requirements-document.prompt.txt — Agent: {{AI_AGENT_NAME}}`. Make the GitHub URL clickable, keep the prompt path literal, and substitute the assistant name.
+
+Return only the HTML document (no extra commentary).
+"""

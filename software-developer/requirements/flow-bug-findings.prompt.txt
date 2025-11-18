@@ -1,0 +1,64 @@
+Prompt Template — Flow Bug Findings HTML
+========================================
+
+Purpose
+-------
+Use this prompt to guide a language model through identifying a defect within any technical flow and recommending a concrete fix. The resulting document should walk stakeholders through the discovery, evidence, and remediation steps in a reusable HTML format.
+
+Required Inputs Before You Run The Prompt
+-----------------------------------------
+- ANALYSIS_TITLE: short descriptive name (e.g., "API Reconciliation Flow – Bug Findings").
+- FLOW_CONTEXT: 1–2 paragraphs describing the flow under review (systems involved, intent, high-level sequence).
+- KEY_OBSERVATIONS: bullet list of suspicious behaviors, logs, or symptoms observed during analysis.
+- FLOW_STEPS: ordered list detailing the flow; each entry should include a StepNumber, Heading, Narrative, and any relevant references (paths, methods, log snippets).
+- ROOT_CAUSE_HYPOTHESIS: text summarizing the suspected defect cause.
+- IMPACT_ASSESSMENT: paragraph explaining who or what is affected and how severe it is.
+- SUGGESTED_FIX: bullet list or short paragraphs outlining the potential fix strategy.
+- TESTING_NOTES (optional): how the fix should be verified (tests, telemetry, manual scenarios).
+- STYLE_NOTES (optional): palette/tone changes if the default dark theme should be overridden.
+- IDE_PROJECT_NAME: IntelliJ project identifier for JetBrains deep links.
+
+How To Use
+----------
+1. Collect the inputs above; make sure FLOW_STEPS and KEY_OBSERVATIONS capture everything needed to reason about the bug.
+2. Replace each placeholder in the prompt body with the real values. Use fenced blocks for multi-line content.
+3. Provide the prompt (including the quoted body) to the model and request a single self-contained HTML document.
+4. Review the output to ensure everything is grounded in your supplied inputs.
+
+Prompt Body (copy everything inside the quotes)
+-----------------------------------------------
+"""
+You are a senior debugging engineer documenting a defect discovered in an end-to-end flow. Produce a single HTML5 document that explains the flow context, pinpoints the bug, and proposes a fix. Follow these requirements exactly.
+
+Inputs
+  • Analysis Title: {{ANALYSIS_TITLE}}
+  • Flow Context: {{FLOW_CONTEXT}}
+  • Key Observations: {{KEY_OBSERVATIONS}}
+  • Flow Steps: {{FLOW_STEPS}}
+  • Root Cause Hypothesis: {{ROOT_CAUSE_HYPOTHESIS}}
+  • Impact Assessment: {{IMPACT_ASSESSMENT}}
+  • Suggested Fix: {{SUGGESTED_FIX}}
+  • Testing Notes: {{TESTING_NOTES}}
+  • Style Notes: {{STYLE_NOTES}}
+  • IDE Project Name: {{IDE_PROJECT_NAME}}
+
+1. Emit valid HTML5 with `<!doctype html>`, `<html lang="en">`, and a `<head>` containing `<meta charset="utf-8">`, `<meta name="viewport"...>`, and `<title>{{ANALYSIS_TITLE}}</title>`.
+2. Include a `<style>` block using a dark palette (body `#0b0d10`, panels `#12161b`, text `#e7ecf3`, emerald/blue accents, subtle borders); only deviate if `{{STYLE_NOTES}}` demands it. Apply `.wrap { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; font-family: system-ui; line-height: 1.6; }`.
+3. Body structure:
+   - `<h1>{{ANALYSIS_TITLE}}</h1>` followed by a paragraph summarizing `{{FLOW_CONTEXT}}`.
+   - Add a “Key Observations” callout (e.g., `<section class="callout">`) listing `{{KEY_OBSERVATIONS}}` so the reader sees the evidence first.
+   - Present a two-column `<table>` with headers “Flow Narrative” and “Implementation References”. For each item in `{{FLOW_STEPS}}`, render:
+     • Left cell: `<section id="step-{{StepNumber}}">` with `<h2>{{StepNumber}}. {{Heading}}</h2>` and the narrative (use `<p>`, bullets, or inline code as appropriate). Embed JetBrains links as `<a href="jetbrains://idea/navigate/reference?project={{IDE_PROJECT_NAME}}&path=…">`.
+     • Right cell: `<h3>Evidence</h3>` with `<ul>` entries describing logs, files, or stack traces. Link to code/log locations using JetBrains links (with `:LineNumber` when precise) or repo-relative paths if deep links are not possible.
+4. After the table, add:
+   - `<section id="root-cause"><h2>Root Cause</h2><p>{{ROOT_CAUSE_HYPOTHESIS}}</p></section>`
+   - `<section id="impact"><h2>Impact</h2><p>{{IMPACT_ASSESSMENT}}</p></section>`
+   - `<section id="fix"><h2>Suggested Fix</h2>` with bullets or paragraphs from `{{SUGGESTED_FIX}}`; include links to affected modules/files.
+   - `<section id="testing"><h2>Testing & Verification</h2>` with `{{TESTING_NOTES}}` or a note stating “TBD” if empty.
+5. Quality bar:
+   - Ensure the document explicitly ties observations to flow steps and the root cause.
+   - Highlight any assumptions or unknowns; if a step lacks definitive evidence, call it out in the narrative.
+   - Keep prose concise and action-oriented; avoid conjecture not backed by `{{KEY_OBSERVATIONS}}`.
+6. Attribution:
+   - Append a `<footer>` stating `Generated via https://github.com/nikcross/ai-prompts — Prompt: software-developer/requirements/flow-bug-findings.prompt.txt — Agent: {{AI_AGENT_NAME}}`. Make the GitHub URL clickable and replace `{{AI_AGENT_NAME}}` with the assistant name.
+"""
